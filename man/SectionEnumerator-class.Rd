@@ -19,4 +19,15 @@ is \code{displayNumSection}. This takes as input a string
 of an unnumbered section, parses that string and computes
 the section number based on the number of hashes.
 }
+\section{Methods}{
+
+\describe{
+\item{\code{displayNumSection(psUnNumSection = NULL)}}{Parsing of unnumbered section string and display the string including the section number}
+
+\item{\code{initialize()}}{Initalisation of object fields}
+
+\item{\code{parseUnNumSection()}}{Parse the unnumbered section string and assign the object fields}
+
+\item{\code{setUnNumSection(psUnNumSection)}}{Setter for unnumbered section string}
+}}
 
