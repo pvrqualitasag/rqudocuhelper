@@ -7,9 +7,12 @@
 ### ################################################### ###
 
 
-#' reference Class for section counting
-#' @export
-#' @exportClass
+#' Reference Class for section count
+#'
+#' The class stores counts for three levels of sections.
+#' The field sHash contains the hash signs that are taken
+#' from an rmarkdown section title. Based on the number of
+#' hash signs the corresponding counter is incremented
 sectionCount <- setRefClass(Class   = "SectionCount",
                             fields  = list(nSectionCount       = "numeric",
                                            nSubSectionCount    = "numeric",
@@ -18,6 +21,7 @@ sectionCount <- setRefClass(Class   = "SectionCount",
                                            sCountSep           = "character"),
                             methods = list(
                               initialize = function(){
+                                'Initialize count fields and set default for count separator'
                                 nSectionCount       <<- 0
                                 nSubSectionCount    <<- 0
                                 nSubSubsectionCount <<- 0
@@ -27,6 +31,7 @@ sectionCount <- setRefClass(Class   = "SectionCount",
                                 sHash <<- psHash
                               },
                               incrSectionCounts = function(){
+                                'Increment section counts based on number of hash signs'
                                 nNrHash <- nchar(sHash)
                                 if (nNrHash == 3){
                                   nSubSubsectionCount <<- nSubSubsectionCount + 1
@@ -40,6 +45,7 @@ sectionCount <- setRefClass(Class   = "SectionCount",
                                 }
                               },
                               sGetSectionNumber = function(){
+                                'Return section number as string'
                                 sSectionNumberResult <- NULL
                                 if (nSectionCount > 0)
                                   sSectionNumberResult <- as.character(nSectionCount)
@@ -57,8 +63,23 @@ sectionCount <- setRefClass(Class   = "SectionCount",
 
 
 #' Reference class for automatically enumerating section titles
-#' @export
-#' @exportClass
+#'
+#' @description
+#' The level of a Markdown section headers is indicated using
+#' hashes in front of the title. YAML frontmatter allows for
+#' to specify section header numbering, but it is not clear
+#' how to mix headers with and without numbers in the same
+#' document. The \code{SectionEnumerator} reference class allows
+#' us to specify section header numbers only for certain titles.
+#'
+#' @details
+#' The main method of a SectionEnumerator reference object
+#' is \code{displayNumSection}. This takes as input a string
+#' of an unnumbered section, parses that string and computes
+#' the section number based on the number of hashes.
+#'
+#' @export SectionEnumerator
+#' @exportClass SectionEnumerator
 SectionEnumerator <- setRefClass(Class   = "SectionEnumerator",
                                  fields  = list(sUnNumSection     = "character",
                                                 rcSectionCount    = "SectionCount",

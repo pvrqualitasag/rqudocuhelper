@@ -6,6 +6,17 @@
 \alias{SectionEnumerator-class}
 \title{Reference class for automatically enumerating section titles}
 \description{
-Reference class for automatically enumerating section titles
+The level of a Markdown section headers is indicated using
+hashes in front of the title. YAML frontmatter allows for
+to specify section header numbering, but it is not clear
+how to mix headers with and without numbers in the same
+document. The \code{SectionEnumerator} reference class allows
+us to specify section header numbers only for certain titles.
+}
+\details{
+The main method of a SectionEnumerator reference object
+is \code{displayNumSection}. This takes as input a string
+of an unnumbered section, parses that string and computes
+the section number based on the number of hashes.
 }
 

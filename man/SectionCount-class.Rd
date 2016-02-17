@@ -4,8 +4,20 @@
 \name{SectionCount-class}
 \alias{SectionCount-class}
 \alias{sectionCount}
-\title{reference Class for section counting}
+\title{Reference Class for section count}
 \description{
-reference Class for section counting
+The class stores counts for three levels of sections.
+The field sHash contains the hash signs that are taken
+from an rmarkdown section title. Based on the number of
+hash signs the corresponding counter is incremented
 }
+\section{Methods}{
+
+\describe{
+\item{\code{incrSectionCounts()}}{Increment section counts based on number of hash signs}
+
+\item{\code{initialize()}}{Initialize count fields and set default for count separator}
+
+\item{\code{sGetSectionNumber()}}{Return section number as string}
+}}
 
