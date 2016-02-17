@@ -91,6 +91,7 @@ SectionEnumerator <- setRefClass(Class   = "SectionEnumerator",
                                  ),
                                  methods = list(
                                    initialize = function(){
+                                     'Initalisation of object fields'
                                      sUnNumSection     <<- ""
                                      sHash             <<- ""
                                      sRemCaption       <<- ""
@@ -99,9 +100,11 @@ SectionEnumerator <- setRefClass(Class   = "SectionEnumerator",
                                      rcSectionCount    <<- sectionCount$new()
                                    },
                                    setUnNumSection = function(psUnNumSection){
+                                     'Setter for unnumbered section string'
                                      sUnNumSection <<- psUnNumSection
                                    },
                                    parseUnNumSection = function(){
+                                     'Parse the unnumbered section string and assign the object fields'
                                      vecUnNumCaption <- unlist(strsplit(sUnNumSection,sSectionSplit))
                                      sHash <<- vecUnNumCaption[1]
                                      nNrHash <<- nchar(sHash)
@@ -115,6 +118,7 @@ SectionEnumerator <- setRefClass(Class   = "SectionEnumerator",
 
                                    },
                                    displayNumSection = function(psUnNumSection = NULL){
+                                     'Parsing of unnumbered section string and display the string including the section number'
                                      if (!is.null(psUnNumSection))
                                        sUnNumSection <<- psUnNumSection
                                      .self$parseUnNumSection()
