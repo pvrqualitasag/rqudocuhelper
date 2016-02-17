@@ -1,0 +1,81 @@
+---
+output:
+  pdf_document:
+    includes:
+      in_header: tex/header.tex
+  word_document: default
+---
+
+
+![Qualitas Logo](png/QualitasLogo.png)
+
+\fcolorbox{black}{white}{
+	\parbox[t]{1.0\linewidth}{
+		\centering \fontsize{12pt}{20pt}\selectfont % 
+		\vspace*{0.5cm} % 
+
+		\hfill Docu -Type
+
+		\vspace*{0.5cm} 
+	}
+}
+
+\vspace*{0.5cm}
+
+\fcolorbox{black}{white}{
+	\parbox[t]{1.0\linewidth}{
+		\centering \fontsize{25pt}{40pt}\selectfont %
+		\vspace*{0.7cm}
+    Title 1    \\
+    Title 2    \\
+    Title 3    \\
+
+		\vspace*{0.7cm} % Space between the end of the title and the bottom of the grey box
+	}
+}
+
+\vspace*{1cm}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{png/Pedigree.png}
+\end{center}
+
+\vspace{5ex}
+{\centering \small
+\hfill
+\begin{tabular}{l}
+Peter von Rohr                      \\
+FB EDV, Qualitas AG                 \\
+\verb+http://www.qualitasag.ch+     \\
+\verb+peter.vonrohr@qualitasag.ch+  
+\end{tabular}
+}
+
+\pagebreak
+
+\tableofcontents
+
+
+# Dokumentenstatus
+
++-------------+------------------+-------+-----------------------------------------------+
+|  Version    |  Datum           |  Wer  |  Änderung                                     |
++=============+==================+=======+===============================================+
+|  0.0.0.900  |                  |  PvR  |  Erstellung                                   |
++-------------+------------------+-------+-----------------------------------------------+
+
+\pagebreak
+
+# Abkürzungen
+
++-------------+-------------------------------------------------------------------------+
+|  Abkürzung  |  Bedeutung                                                              |
++=============+=========================================================================+
+|  Abk        |  Abkürzung                                                              |
++-------------+-------------------------------------------------------------------------+
+
+
+\pagebreak
+
+
+# Erklärung
