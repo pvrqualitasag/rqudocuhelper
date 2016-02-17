@@ -28,6 +28,9 @@ and in managing the documents during their lifetime.
 \details{
 It is important to note that the template documents that are coming with this package
 cannot be compiled with the development version of \code{rmarkdown} which comes from
-GitHub.
+GitHub. Due to this package dependency, the whole project was converted into a packrat
+project, where we can keep the package \code{rmarkdown} to the version of CRAN. The
+GitHub developement version of \code{rmarkdown} is needed when we want to create
+websites as described on http://rmarkdown.rstudio.com/html_document_format.html
 }
 
