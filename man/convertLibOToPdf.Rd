@@ -4,14 +4,14 @@
 \alias{convertLibOToPdf}
 \title{Convert documents from source format into target format used in the document}
 \usage{
-convertLibOToPdf(psLibOFile, psLibODir = "odg", psFigDirOut = ".")
+convertLibOToPdf(psLibOFile, psLibODir = "odg", psFigOutDir = ".")
 }
 \arguments{
 \item{psLibOFile}{name of the libre office graphics file}
 
 \item{psLibODir}{source directory of Libre Office files}
 
-\item{psFigDirOut}{output directory where figure pdfs are expected to be}
+\item{psFigOutDir}{output directory where figure pdfs are expected to be}
 }
 \description{
 \code{convertLibOToPdf} assumes that graphics or diagrams are produced by
