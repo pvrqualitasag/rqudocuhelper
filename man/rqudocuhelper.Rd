@@ -4,7 +4,7 @@
 \name{rqudocuhelper}
 \alias{rqudocuhelper}
 \alias{rqudocuhelper-package}
-\title{Helper function for creating Qualitas documentation.}
+\title{Helper function for creating documentation based on templates from Qualitas AG.}
 \description{
 Documentation inside Qualitas can be a number of different documents such as
 

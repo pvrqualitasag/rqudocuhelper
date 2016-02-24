@@ -8,14 +8,22 @@
 
 #' Cleaning up a vignette directory
 #'
+#' @description
 #' \code{cleanup_vignettes} removes all output files that were
-#' produced by any tools. The goal is to have only source files
-#' after the cleanup process.
+#' produced by compiling document sources. The goal is to have
+#' only source files after the cleanup process.
 #'
-#' @param pkg         package directory
+#' @details
+#' The approach taken in function \code{cleanup_vignettes} is
+#' to specify the pattern of the files to be deleted and the
+#' pattern of the files to keep. The reason for this is that
+#' the number of ouput formats to be specified is much smaller
+#' than the number of files that must be kept.
+#'
+#' @param psPath      path to root directory which should be cleaned
 #' @param psPattern   that files to be clean match
-#' @export
-cleanup_vignettes <- function(psPath = "rmd", psPattern = "pdf$"){
+#' @export cleanup_vignettes
+cleanup_vignettes <- function(psPath = "vignettes", psPattern = "pdf$"){
   ### # files to be cleaned up
   for (p in psPattern) {
     files_to_remove <- list.files(path = psPath, pattern = psPattern, full.names = TRUE)

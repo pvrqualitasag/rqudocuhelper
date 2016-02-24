@@ -4,16 +4,23 @@
 \alias{cleanup_vignettes}
 \title{Cleaning up a vignette directory}
 \usage{
-cleanup_vignettes(psPath = "rmd", psPattern = "pdf$")
+cleanup_vignettes(psPath = "vignettes", psPattern = "pdf$")
 }
 \arguments{
-\item{psPattern}{that files to be clean match}
+\item{psPath}{path to root directory which should be cleaned}
 
-\item{pkg}{package directory}
+\item{psPattern}{that files to be clean match}
 }
 \description{
 \code{cleanup_vignettes} removes all output files that were
-produced by any tools. The goal is to have only source files
-after the cleanup process.
+produced by compiling document sources. The goal is to have
+only source files after the cleanup process.
+}
+\details{
+The approach taken in function \code{cleanup_vignettes} is
+to specify the pattern of the files to be deleted and the
+pattern of the files to keep. The reason for this is that
+the number of ouput formats to be specified is much smaller
+than the number of files that must be kept.
 }
 
