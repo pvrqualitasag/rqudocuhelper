@@ -6,6 +6,50 @@
 ###
 ### ############################################################ ###
 
+#' Create a documentation package
+#'
+#' @description
+#' \code{create_docu_package} creates a documentation package using
+#' \code{devtools::create}. Description information can be provided
+#' by the additional arguments to the function
+#'
+#' @param psPkgName           name of the package
+#' @param psPkgPath           path below which package is created
+#' @param psDescTitle         title of the package
+#' @param psDescAuthor        author information
+#' @param psDescDescription   Description field in dcf
+#' @param psDescLicense       license information
+#' @export create_docu_package
+create_docu_package <- function(psPkgName,
+                                psPkgPath = ".",
+                                psDescTitle = NULL,
+                                psDescAuthor = NULL,
+                                psDescDescription = NULL,
+                                psDescLicense = NULL) {
+  ### # start by creating a package
+  devtools::create(path = psPkgName)
+  pkg <- devtools::as.package(psPkgName)
+  ### # if any of the desc components is not null, change
+  ### #  description
+  if (!is.null(c(psDescTitle,psDescAuthor,psDescDescription,psDescLicense))){
+    ### # read existing DESCRIPTION
+    refObjDesc <- DcfRefClass$new()
+    sDcfFile <- file.path(pkg$path, "DESCRIPTION")
+    refObjDesc$readDcf(psDcfFile = sDcfFile)
+    ### # change values
+    if (!is.null(psDescTitle))
+      refObjDesc$setTitle(psTitle = psDescTitle)
+    if (!is.null(psDescAuthor))
+      refObjDesc$setAuthor(psAuthor = psDescAuthor)
+    if (!is.null(psDescDescription))
+      refObjDesc$setDescription(psDescription = psDescDescription)
+    if (!is.null(psDescLicense))
+      refObjDesc$setLicense(psLicense = psDescLicense)
+    ### # write back changes
+    refObjDesc$writeDcf(psDcfFile = sDcfFile)
+  }
+}
+
 #' Create a new Rmarkdown (Rmd) document
 #'
 #' @description
