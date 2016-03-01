@@ -21,6 +21,9 @@ The approach taken in function \code{cleanup_vignettes} is
 to specify the pattern of the files to be deleted and the
 pattern of the files to keep. The reason for this is that
 the number of ouput formats to be specified is much smaller
-than the number of files that must be kept.
+than the number of files that must be kept. The files to be
+removed are first collected into a vector, then the user
+is asked whether to remove all files. This is a security
+feature to avoid deleting files accidentally.
 }
 
