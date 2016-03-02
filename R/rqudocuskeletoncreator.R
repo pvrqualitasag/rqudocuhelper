@@ -24,6 +24,7 @@ create_docu_package <- function(psPkgName,
                                 psPkgPath = ".",
                                 psDescTitle = NULL,
                                 psDescAuthor = NULL,
+                                psDescMaintainer = NULL,
                                 psDescDescription = NULL,
                                 psDescLicense = NULL) {
   ### # start by creating a package
@@ -31,7 +32,7 @@ create_docu_package <- function(psPkgName,
   pkg <- devtools::as.package(psPkgName)
   ### # if any of the desc components is not null, change
   ### #  description
-  if (!is.null(c(psDescTitle,psDescAuthor,psDescDescription,psDescLicense))){
+  if (!is.null(c(psDescTitle,psDescAuthor,psDescMaintainer,psDescDescription,psDescLicense))){
     ### # read existing DESCRIPTION
     refObjDesc <- DcfRefClass$new()
     sDcfFile <- file.path(pkg$path, "DESCRIPTION")
@@ -41,6 +42,8 @@ create_docu_package <- function(psPkgName,
       refObjDesc$setTitle(psTitle = psDescTitle)
     if (!is.null(psDescAuthor))
       refObjDesc$setAuthor(psAuthor = psDescAuthor)
+    if (!is.null(psDescMaintainer))
+      #refObjDesc$setMaintainer(psMaintainer = psDescMaintainer)
     if (!is.null(psDescDescription))
       refObjDesc$setDescription(psDescription = psDescDescription)
     if (!is.null(psDescLicense))
@@ -66,7 +69,11 @@ create_docu_package <- function(psPkgName,
 #' of specifying any given template from any package.
 #'
 #' @param   psDocuName   name of the new document
-#' @param   psPath       parent directory of rmd source dir
+#' @param   psPkgPath    path where package is located under which document should be created
+#' @param   psRmdTemplate   name of the template to be used
+#' @param   psTemplatePkg   package from where the template should be taken
+#' @param   psDocuSubdir    subdirectory in which document should be saved to
+#' @param   pbEdit          directly open newly created document
 #' @export create_docu_skeleton
 create_docu_skeleton <- function(psDocuName,
                                  psPkgPath     = ".",

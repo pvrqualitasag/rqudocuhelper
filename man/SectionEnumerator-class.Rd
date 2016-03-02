@@ -22,7 +22,7 @@ the section number based on the number of hashes.
 \section{Methods}{
 
 \describe{
-\item{\code{displayNumSection(psUnNumSection = NULL)}}{Parsing of unnumbered section string and display the string including the section number}
+\item{\code{displayNumSection(psUnNumSection = NULL, pnNrExtraHash = 0)}}{Parsing of unnumbered section string and display the string including the section number}
 
 \item{\code{initialize()}}{Initalisation of object fields}
 

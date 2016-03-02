@@ -5,7 +5,8 @@
 \title{Create a documentation package}
 \usage{
 create_docu_package(psPkgName, psPkgPath = ".", psDescTitle = NULL,
-  psDescAuthor = NULL, psDescDescription = NULL, psDescLicense = NULL)
+  psDescAuthor = NULL, psDescMaintainer = NULL, psDescDescription = NULL,
+  psDescLicense = NULL)
 }
 \arguments{
 \item{psPkgName}{name of the package}

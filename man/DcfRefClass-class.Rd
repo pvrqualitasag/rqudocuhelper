@@ -6,11 +6,33 @@
 \alias{DcfRefClass-class}
 \title{Reference class for DESCRIPTION information}
 \description{
-\code{DcfRefClass} objects can be used to read
-dcf files, to change information of the dcf
-components and to write the dcf content back
-to a file.
+\code{DcfRefClass} reference objects can be used
+to represent dcf structured information that is
+usually stored in DESCRIPTION files of a package.
+The basic functionality of \code{DcfRefClass}
+reference objects consists of
+
+\itemize{
+  \item reading a dcf files
+  \item changing dcf components
+  \item writing a dcf structure back to a file
 }
+}
+\details{
+When creating a new package with \code{devtools::create()}
+the default description file contains the field Author@R
+which contains the definition of a \code{person()} object
+as a string. This field is difficult to change, hence this
+field Author@R is converted into a simple field Author of
+type string and in a field Maintainer which is also of type
+string. This conversion is done immediately when the
+DESCRIPTION file is read.
+}
+\section{Fields}{
+
+\describe{
+\item{\code{lCurDesc}}{current dcf read from DESCRIPTION as a list}
+}}
 \section{Methods}{
 
 \describe{
@@ -20,15 +42,21 @@ to a file.
 
 \item{\code{getLicence()}}{getter for license}
 
+\item{\code{getMaintainer()}}{getter for maintainer}
+
 \item{\code{getTitle()}}{getter for title}
 
-\item{\code{readDcf(psDcfFile = "DESCRIPTION")}}{Read a description file using read.dcf}
+\item{\code{readDcf(psDcfFile = "DESCRIPTION")}}{Read a description file using read.dcf. Convert resulting dataframe
+to a list using columnnames of dataframe as names for list, except
+for the field Author@R. See Details for more information}
 
 \item{\code{setAuthor(psAuthor)}}{setter for author}
 
 \item{\code{setDescription(psDescription)}}{setter for description}
 
 \item{\code{setLicense(psLicense)}}{setter for license}
+
+\item{\code{setMaintainer(psMaintainer)}}{setter for maintainer}
 
 \item{\code{setTitle(psTitle)}}{setter for title}
 

@@ -1,0 +1,5 @@
+name: Hybrid Fragebogen (PDF)
+description: >
+  Template for hybrid questionnairs. This customises pdf document 
+  generation for hybrid questionnairs using paperandpencil latex style.
+create_dir: false

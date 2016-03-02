@@ -18,7 +18,8 @@ sectionCount <- setRefClass(Class   = "SectionCount",
                                            nSubSectionCount    = "numeric",
                                            nSubSubsectionCount = "numeric",
                                            sHash               = "character",
-                                           sCountSep           = "character"),
+                                           sCountSep           = "character",
+                                           nNrExtraHash        = "numeric"),
                             methods = list(
                               initialize = function(){
                                 'Initialize count fields and set default for count separator'
@@ -26,13 +27,19 @@ sectionCount <- setRefClass(Class   = "SectionCount",
                                 nSubSectionCount    <<- 0
                                 nSubSubsectionCount <<- 0
                                 sCountSep           <<- "."
+                                nNrExtraHash        <<- 0
                               },
                               setHash = function(psHash){
                                 sHash <<- psHash
                               },
+                              setNrExtraHash = function(pnNrExtraHash){
+                                nNrExtraHash <<- pnNrExtraHash
+                              },
                               incrSectionCounts = function(){
                                 'Increment section counts based on number of hash signs'
                                 nNrHash <- nchar(sHash)
+                                if (nNrExtraHash < nNrHash)
+                                  nNrHash <- nNrHash - nNrExtraHash
                                 if (nNrHash == 3){
                                   nSubSubsectionCount <<- nSubSubsectionCount + 1
                                 } else if(nNrHash == 2){
@@ -87,7 +94,7 @@ SectionEnumerator <- setRefClass(Class   = "SectionEnumerator",
                                                 sRemCaption       = "character",
                                                 sNumCaptionResult = "character",
                                                 sSectionSplit     = "character",
-                                                nNrHash           = "numeric"
+                                                nNrExtraHash      = "numeric"
                                  ),
                                  methods = list(
                                    initialize = function(){
@@ -97,28 +104,33 @@ SectionEnumerator <- setRefClass(Class   = "SectionEnumerator",
                                      sRemCaption       <<- ""
                                      sNumCaptionResult <<- ""
                                      sSectionSplit     <<- " "
+                                     nNrExtraHash      <<- 0
                                      rcSectionCount    <<- sectionCount$new()
                                    },
                                    setUnNumSection = function(psUnNumSection){
                                      'Setter for unnumbered section string'
                                      sUnNumSection <<- psUnNumSection
                                    },
+                                   setNrExtraHash = function(pnNrExtraHash){
+                                     nNrExtraHash <<- pnNrExtraHash
+                                   },
                                    parseUnNumSection = function(){
                                      'Parse the unnumbered section string and assign the object fields'
                                      vecUnNumCaption <- unlist(strsplit(sUnNumSection,sSectionSplit))
                                      sHash <<- vecUnNumCaption[1]
-                                     nNrHash <<- nchar(sHash)
                                      sRemCaption <<- paste0(vecUnNumCaption[2:length(vecUnNumCaption)],
                                                             collapse = " ")
                                      rcSectionCount$setHash(psHash = sHash)
+                                     rcSectionCount$setNrExtraHash(pnNrExtraHash = nNrExtraHash)
                                      rcSectionCount$incrSectionCounts()
                                      sNumCaptionResult <<- paste(sHash,
                                                                  rcSectionCount$sGetSectionNumber(),
                                                                  sRemCaption)
 
                                    },
-                                   displayNumSection = function(psUnNumSection = NULL){
+                                   displayNumSection = function(psUnNumSection = NULL, pnNrExtraHash = 0){
                                      'Parsing of unnumbered section string and display the string including the section number'
+                                     nNrExtraHash <<- pnNrExtraHash
                                      if (!is.null(psUnNumSection))
                                        sUnNumSection <<- psUnNumSection
                                      .self$parseUnNumSection()

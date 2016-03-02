@@ -11,7 +11,15 @@ create_docu_skeleton(psDocuName, psPkgPath = ".",
 \arguments{
 \item{psDocuName}{name of the new document}
 
-\item{psPath}{parent directory of rmd source dir}
+\item{psPkgPath}{path where package is located under which document should be created}
+
+\item{psRmdTemplate}{name of the template to be used}
+
+\item{psTemplatePkg}{package from where the template should be taken}
+
+\item{psDocuSubdir}{subdirectory in which document should be saved to}
+
+\item{pbEdit}{directly open newly created document}
 }
 \description{
 \code{create_docu_skeleton} assumes that psPkgPath is a
