@@ -17,8 +17,28 @@ us to specify section header numbers only for certain titles.
 The main method of a SectionEnumerator reference object
 is \code{displayNumSection}. This takes as input a string
 of an unnumbered section, parses that string and computes
-the section number based on the number of hashes.
+the section number based on the number of hashes. For some
+reason, the option \code{number_sections = FALSE} does not
+work for top level directories, but it works for subsections.
+As a work-around, all sections are moved down one level.
 }
+\section{Fields}{
+
+\describe{
+\item{\code{sUnNumSection}}{original ununmbered section string}
+
+\item{\code{rcSectionCount}}{reference object representing section count}
+
+\item{\code{sHash}}{hashes of caption}
+
+\item{\code{sRemCaption}}{remaining caption after removing hashes}
+
+\item{\code{sNumCaptionResult}}{resulting caption string with number}
+
+\item{\code{sSectionSplit}}{split character between number and title}
+
+\item{\code{nNrExtraHash}}{number of extra hashes not used for section counts}
+}}
 \section{Methods}{
 
 \describe{

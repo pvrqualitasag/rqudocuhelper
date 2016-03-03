@@ -1,12 +1,12 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.6.1
 RVersion: 3.2.3
-Repos: BioCsoft=http://bioconductor.org/packages/3.1/bioc,
+Repos: CRANextra=http://www.stats.ox.ac.uk/pub/RWin,
+    BioCsoft=http://bioconductor.org/packages/3.1/bioc,
     BioCann=http://bioconductor.org/packages/3.1/data/annotation,
     BioCexp=http://bioconductor.org/packages/3.1/data/experiment,
     BioCextra=http://bioconductor.org/packages/3.1/extra,
-    CRAN=https://cran.rstudio.com/,
-    CRANextra=http://www.stats.ox.ac.uk/pub/RWin
+    CRAN=https://cran.rstudio.com/
 
 Package: bitops
 Source: CRAN
