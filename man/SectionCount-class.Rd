@@ -4,13 +4,35 @@
 \name{SectionCount-class}
 \alias{SectionCount-class}
 \alias{sectionCount}
-\title{Reference Class for section count}
+\title{Reference Class for section counts}
 \description{
-The class stores counts for three levels of sections.
-The field sHash contains the hash signs that are taken
-from an rmarkdown section title. Based on the number of
-hash signs the corresponding counter is incremented
+A reference object of reference class \code{SectionCount}
+represents the numbers in front of a section title.
 }
+\details{
+The section title number  counts the numbers of different
+section at any given level up and until a given section
+title. In a markdown (md) document section levels
+of titles are denoted by hash (#) signs. Based on the
+number of hash signs of a given section title, the level of
+the corresponding section title can be inferred. The more
+hash signs the lower the level of the section title. Hence
+one hash means top-level section title, two hashes stand
+for subsections, three hashes denote subsubsectiones, etc.
+For a given section title the level determines the corresponding
+number of the section title. For a top-level section there
+is just one number, for a subsection there are two numbers
+separated by a dot (.) and for subsubsections there are
+three numbers all separated by dots. Each of the numbers
+that are associated with a given section title count the
+number of sections for a specific level up
+and until that given section title.
+}
+\section{Fields}{
+
+\describe{
+\item{\code{vSectionCount}}{vector with section counts}
+}}
 \section{Methods}{
 
 \describe{
@@ -18,6 +40,7 @@ hash signs the corresponding counter is incremented
 
 \item{\code{initialize()}}{Initialize count fields and set default for count separator}
 
-\item{\code{sGetSectionNumber()}}{Return section number as string}
+\item{\code{sGetSectionNumber()}}{Return section number as string, as soon as a count is zero
+we stop pasting together. This assumes counts are 1-based.}
 }}
 

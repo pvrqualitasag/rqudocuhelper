@@ -19,8 +19,11 @@ is \code{displayNumSection}. This takes as input a string
 of an unnumbered section, parses that string and computes
 the section number based on the number of hashes. For some
 reason, the option \code{number_sections = FALSE} does not
-work for top level directories, but it works for subsections.
-As a work-around, all sections are moved down one level.
+work for top level sections, but it only works for subsections.
+As a work-around, all sections are moved down one level to subsections
+by ignoring a given number of \code{nNrExtraHash} hash signs.
+Hence a subsection will be numbered as a section and a subsubsection
+will be numbered as a subsection etc.
 }
 \section{Fields}{
 
@@ -42,7 +45,7 @@ As a work-around, all sections are moved down one level.
 \section{Methods}{
 
 \describe{
-\item{\code{displayNumSection(psUnNumSection = NULL, pnNrExtraHash = 0)}}{Parsing of unnumbered section string and display the string including the section number}
+\item{\code{displayNumSection(psUnNumSection = NULL, pnNrExtraHash = NULL)}}{Parsing of unnumbered section string and display the string including the section number}
 
 \item{\code{initialize()}}{Initalisation of object fields}
 

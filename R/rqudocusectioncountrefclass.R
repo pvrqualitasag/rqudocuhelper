@@ -45,7 +45,7 @@ sectionCount <- setRefClass(Class   = "SectionCount",
                               .lGetDefaults = function(){
                                 'default values for given reference object'
                                 return(list(nNrSectionLevels = 6L))
-                              }
+                              },
                               initialize = function(){
                                 'Initialize count fields and set default for count separator'
                                 lRefObjDefaults     <- .self$.lGetDefaults()
@@ -70,38 +70,31 @@ sectionCount <- setRefClass(Class   = "SectionCount",
                                 # subtract any number of extra hashes
                                 if (nNrExtraHash < nNrHash)
                                   nNrHash <- nNrHash - nNrExtraHash
-                                # increment the section count at the appropriate
-                                #  level
-                                if (nNrHash > length(vSectionCount))
-                                  stop(" * Current title seams to have ", nNrHash, " levels. The max. number of levels is: ",
-                                        length(vSectionCount))
-                                vSectionCount[nNrHash] <- vSectionCount[nNrHash] + 1
+                                # increment the section count at the appropriate level
+                                nNrMaxSectLevel <- length(vSectionCount)
+                                if (nNrHash > nNrMaxSectLevel)
+                                  stop(" * Current title seams to have ", nNrHash,
+                                       " levels. The max. number of levels is: ",
+                                       nNrMaxSectLevel)
+                                vSectionCount[nNrHash] <<- vSectionCount[nNrHash] + 1
                                 # set all counts of lower levels to 0
-                                if (nNrHash < )
-                                if (nNrHash == 3){
-                                  nSubSubsectionCount <<- nSubSubsectionCount + 1
-                                } else if(nNrHash == 2){
-                                  nSubSectionCount <<- nSubSectionCount + 1
-                                  nSubSubsectionCount <<- 0
-                                } else if(nNrHash == 1){
-                                  nSectionCount <<- nSectionCount + 1
-                                  nSubSubsectionCount <<- 0
-                                  nSubSectionCount <<- 0
-                                }
+                                if (nNrHash < nNrMaxSectLevel)
+                                  vSectionCount[(nNrHash+1):nNrMaxSectLevel] <<- 0
                               },
                               sGetSectionNumber = function(){
-                                'Return section number as string'
+                                'Return section number as string, as soon as a count is zero
+                                  we stop pasting together. This assumes counts are 1-based.'
                                 sSectionNumberResult <- NULL
-                                if (nSectionCount > 0)
-                                  sSectionNumberResult <- as.character(nSectionCount)
-                                if (nSubSectionCount > 0)
+                                if (vSectionCount[1] > 0)
+                                  sSectionNumberResult <- as.character(vSectionCount[1])
+                                ### # loop over remaining vSectionCount
+                                for (nSecCountIdx in 2:length(vSectionCount)){
+                                  if (vSectionCount[nSecCountIdx] == 0)
+                                    break
                                   sSectionNumberResult <- paste(sSectionNumberResult,
-                                                                as.character(nSubSectionCount),
+                                                                as.character(vSectionCount[nSecCountIdx]),
                                                                 sep = sCountSep)
-                                if (nSubSubsectionCount > 0)
-                                  sSectionNumberResult <- paste(sSectionNumberResult,
-                                                                as.character(nSubSubsectionCount),
-                                                                sep = sCountSep)
+                                }
                                 return(sSectionNumberResult)
                               }
                             ))
