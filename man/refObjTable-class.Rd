@@ -43,7 +43,8 @@ functions \code{knitr::kable()} and \code{pander::pandoc.table()}
  the table header is added as columnnames of the data.frame
  representation of the table body.}
 
-\item{\code{to_pander_pandoc(psStyle = "rmarkdown", psJustify = NULL)}}{Output current table in markdown format using the function
+\item{\code{to_pander_pandoc(psStyle = "rmarkdown", psJustify = NULL,
+  pnSplitCells = 30)}}{Output current table in markdown format using the function
  pander::pandoc.table(). This method accepts two parameters
  psStyle and psJustify which are passed to
  to pander::pandoc.table().}

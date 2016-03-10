@@ -6,6 +6,13 @@ output:
   word_document: default
 ---
 
+```{r DocumentSetup, echo=FALSE, results='hide', include=FALSE}
+### # specify knitr options
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+
+### # initialize section counter
+robjSecEnum <- rqudocuhelper::SectionEnumerator$new()
+```
 
 ![Qualitas Logo](png/QualitasLogo.png)
 
@@ -55,25 +62,50 @@ FB EDV, Qualitas AG                 \\
 
 \tableofcontents
 
+\pagebreak
 
 # Dokumentenstatus
 
-+-------------+------------------+-------+-----------------------------------------------+
-|  Version    |  Datum           |  Wer  |  Änderung                                     |
-+=============+==================+=======+===============================================+
-|  0.0.0.900  |                  |  PvR  |  Erstellung                                   |
-+-------------+------------------+-------+-----------------------------------------------+
+
+
+```{r DocuStatusTable}
+robjDocuStatus <- rqudocuhelper::refObjTable$new()
+pvecTableHeader <- c("Version",
+                     "Datum",
+                     "Wer",
+                     "Änderung")
+robjDocuStatus$setTableHeader(psTableHeader = pvecTableHeader)
+robjDocuStatus$addRow(plTableRow = list(Version = "0.0.0.900",
+                                        Date    = "",
+                                        Who     = Sys.info()[["user"]],
+                                        Change  = "Erstellung"))
+#robjDocuStatus$addRow(plTableRow = list(Version = "0.0.0.901",
+#                                        Date    = "",
+#                                        Who     = Sys.info()[["user"]],
+#                                        Change  = ""))
+robjDocuStatus$to_pander_pandoc(psStyle = "grid",
+                                psJustify = rep("left", length(pvecTableHeader)),
+                                pnSplitCells = c(10,15,5,40))
+
+```
 
 \pagebreak
 
 # Abkürzungen
 
-+-------------+-------------------------------------------------------------------------+
-|  Abkürzung  |  Bedeutung                                                              |
-+=============+=========================================================================+
-|  Abk        |  Abkürzung                                                              |
-+-------------+-------------------------------------------------------------------------+
-
+```{r AbrTable}
+robjAbrTable <- rqudocuhelper::refObjTable$new()
+pvecTableHeader <- c("Abkürzung",
+                     "Bedeutung")
+robjAbrTable$setTableHeader(psTableHeader = pvecTableHeader)
+robjAbrTable$addRow(plTableRow = list(Abr = "Abk",
+                                      What = "Abkürzung"))
+#robjAbrTable$addRow(plTableRow = list(Abr = "",
+#                                      What = ""))
+robjAbrTable$to_pander_pandoc(psStyle = "grid",
+                              psJustify = rep("left", length(pvecTableHeader)),
+                              pnSplitCells = c(20,60))
+```
 
 \pagebreak
 
