@@ -26,30 +26,21 @@ convertLibOToPdf <- function(psLibOFile, psLibODir = "odg", psFigOutDir = "."){
 
 
 ## ---- Insert a Odg draw figure -------------------------------------------
-#' Inserts an odg draw figure into a rmarkdown text
+#' Inserts an odg draw graphic into a rmarkdown text
 #'
-#' \code{insertOdgFigure} takes the name of a file containing a figure
-#' in odg format, converts the content of that file into pdf using
-#' function \code{convertLibOToPdf} and outputs the string in markdown
-#' format to include the figure
+#' \code{insertOdgAsPdf} is just a wrapper to the same function
+#' in package \code{rcoursetools}
 #'
 #' @param  psOdgFileStem  stem of odg figure file
 #' @param  psOdgDir       directory where odg figure file is stored
 #' @param  psFigOutDir    directory where output should be placed
-#' @export insertOdgFigureAsPdf
-insertOdgFigureAsPdf <- function(psOdgFileStem, psOdgDir = "odg", psFigOutDir = ".") {
-  ### # check that psOdgFileName exists
-  sOdgFilename <- paste(psOdgFileStem, "odg", sep = ".")
-  sOdgFile <- file.path(psOdgDir, sOdgFilename)
-  if (!file.exists(sOdgFile))
-    stop("Cannot find Odg figure file: ", sOdgFile)
-  ### # convert odg file to pdf
-  convertLibOToPdf(psLibOFile = sOdgFilename, psLibODir = psOdgDir, psFigOutDir = psFigOutDir)
-  ### # check that generated pdf file exists
-  sPdfFilename <- paste(psOdgFileStem, "pdf", sep = ".")
-  sPdfFile <- file.path(psFigOutDir,sPdfFilename)
-  if (!file.exists(sPdfFile))
-    stop("Cannot find pdf figure file: ", sPdfFile)
-  ### # output the command to include the figure
-  cat("![", psOdgFileStem, "](", sPdfFile, ")\n", sep = "")
+#' @export insertOdgAsPdf
+insertOdgAsPdf <- function(psOdgFileStem, psOdgDir = "odg",
+                           psFigOutDir = ".",
+                           pbMustGenerate = FALSE,
+                           pnPaperWidthScale = NULL) {
+  rcoursetools::insertOdgAsPdf(psOdgFileStem     = psOdgFileStem,
+                               psOdgDir          = psOdgDir,
+                               pbMustGenerate    = pbMustGenerate,
+                               pnPaperWidthScale = pnPaperWidthScale)
 }
