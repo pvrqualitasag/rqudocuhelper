@@ -6,7 +6,7 @@
 \usage{
 create_docu_skeleton(psDocuName, psPkgPath = ".",
   psRmdTemplate = "project_docu", psTemplatePkg = "rqudocuhelper",
-  psDocuSubdir = "vignettes", pbEdit = FALSE)
+  psDocuSubdir = "vignettes", pbOverwrite = FALSE, pbEdit = FALSE)
 }
 \arguments{
 \item{psDocuName}{name of the new document}

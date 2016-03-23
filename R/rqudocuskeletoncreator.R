@@ -11,7 +11,11 @@
 #' @description
 #' \code{create_docu_package} creates a documentation package using
 #' \code{devtools::create}. Description information can be provided
-#' by the additional arguments to the function
+#' by the additional arguments to the function. Changes to the
+#' DESCRIPTION file are moved to a separate function called
+#' \code{add_dcf_info}. If any of the arguments specific to the
+#' DESCRIPTION file are not null, then the function
+#' \code{add_dcf_info} is called.
 #'
 #' @param psPkgName           name of the package
 #' @param psPkgPath           path below which package is created
@@ -33,25 +37,16 @@ create_docu_package <- function(psPkgName,
   ### # if any of the desc components is not null, change
   ### #  description
   if (!is.null(c(psDescTitle,psDescAuthor,psDescMaintainer,psDescDescription,psDescLicense))){
-    ### # read existing DESCRIPTION
-    refObjDesc <- DcfRefClass$new()
-    sDcfFile <- file.path(pkg$path, "DESCRIPTION")
-    refObjDesc$readDcf(psDcfFile = sDcfFile)
-    ### # change values
-    if (!is.null(psDescTitle))
-      refObjDesc$setTitle(psTitle = psDescTitle)
-    if (!is.null(psDescAuthor))
-      refObjDesc$setAuthor(psAuthor = psDescAuthor)
-    if (!is.null(psDescMaintainer))
-      #refObjDesc$setMaintainer(psMaintainer = psDescMaintainer)
-    if (!is.null(psDescDescription))
-      refObjDesc$setDescription(psDescription = psDescDescription)
-    if (!is.null(psDescLicense))
-      refObjDesc$setLicense(psLicense = psDescLicense)
-    ### # write back changes
-    refObjDesc$writeDcf(psDcfFile = sDcfFile)
+    add_dcf_info(psPkgPath         = pkg$path,
+                 psDescTitle       = psDescTitle,
+                 psDescAuthor      = psDescAuthor,
+                 psDescMaintainer  = psDescMaintainer,
+                 psDescDescription = psDescDescription,
+                 psDescLicense     = psDescLicense)
   }
 }
+
+### ############################################################ ###
 
 #' Create a new Rmarkdown (Rmd) document
 #'
@@ -80,6 +75,7 @@ create_docu_skeleton <- function(psDocuName,
                                  psRmdTemplate = "project_docu",
                                  psTemplatePkg = "rqudocuhelper",
                                  psDocuSubdir  = "vignettes",
+                                 pbOverwrite   = FALSE,
                                  pbEdit        = FALSE) {
   ### # do the preparation similar to devtools::use_vignette
   pkg <- devtools::as.package(psPkgPath)
@@ -89,15 +85,17 @@ create_docu_skeleton <- function(psDocuName,
   devtools:::add_desc_package(pkg, "VignetteBuilder", "knitr")
   dir.create(file.path(pkg$path, psDocuSubdir), showWarnings = FALSE)
   sDocuPath <- file.path(pkg$path, psDocuSubdir, paste0(psDocuName, ".Rmd"))
-  rmarkdown::draft(file = sDocuPath,
-                   template = psRmdTemplate,
-                   package = psTemplatePkg,
-                   create_dir = FALSE,
-                   edit = FALSE)
+  rmd_draft(file = sDocuPath,
+            template = psRmdTemplate,
+            package = psTemplatePkg,
+            create_dir = FALSE,
+            pbOverwrite = pbOverwrite)
+
   if (pbEdit) file.edit(sDocuPath)
   message("Draft vignette created in ", sDocuPath)
 
 }
+
 
 #' Adding a string to .gitignore
 add_git_ignore <- function (psPath = ".", psIgnores)
@@ -119,3 +117,123 @@ union_write <- function (path, new_lines)
   all <- union(lines, new_lines)
   writeLines(all, path)
 }
+
+### ############################################################ ###
+
+#' Custom local copy of rmarkdown::draft
+#'
+#' @description
+#' \code{rmd_draft} corresponds to a local copy of
+#' \code{rmarkdown::draft}. In contrast to the original
+#' version, this version allows for the use of templates
+#' with skeleton files which are already found in the
+#' target directory.
+#'
+#'
+#' @param file          name of the new document
+#' @param template      name of the template
+#' @param package       package where template can be found
+#' @param create_dir    whether or not to create a new directory for this document
+#' @param pbOverwrite   should existing files be overwritten
+rmd_draft <- function(file, template,
+                      package = NULL,
+                      create_dir = "default",
+                      pbOverwrite = FALSE){
+  ### # determine the template path which is contained
+  ### #  in package "package"
+  if (!is.null(package)) {
+    template_path = system.file("rmarkdown", "templates",
+                                template, package = package)
+    if (!nzchar(template_path)) {
+      stop("The template '", template, "' was not found in the ",
+           package, " package")
+    }
+  } else {
+    template_path <- template
+  }
+  ### # read info in template.yaml
+  template_yaml <- file.path(template_path, "template.yaml")
+  if (!file.exists(template_yaml)) {
+    stop("No template.yaml file found for template '", template,
+         "'")
+  }
+  template_meta <- rmarkdown:::yaml_load_file_utf8(template_yaml)
+  if (is.null(template_meta$name) || is.null(template_meta$description)) {
+    stop("template.yaml must contain name and description fields")
+  }
+  if (identical(create_dir, "default"))
+    create_dir <- isTRUE(template_meta$create_dir)
+  if (create_dir) {
+    file <- tools::file_path_sans_ext(file)
+    if (dir_exists(file))
+      stop("The directory '", file, "' already exists.")
+    dir.create(file)
+    file <- file.path(file, basename(file))
+  }
+  ### # error, in case file itself already exists
+  if (!identical(tolower(tools::file_ext(file)), "rmd"))
+    file <- paste(file, ".Rmd", sep = "")
+  if (file.exists(file))
+    stop("The file '", file, "' already exists.")
+  ### # generate a list of skeleton files
+  skeleton_files <- list.files(file.path(template_path, "skeleton"),
+                               full.names = TRUE)
+  to <- dirname(file)
+  for (f in skeleton_files) {
+    if (pbOverwrite)
+      file.copy(from = f, to = to, overwrite = pbOverwrite, recursive = TRUE)
+    if (!file.exists(file.path(to, basename(f))))
+      # stop("The file '", basename(f), "' already exists")
+      file.copy(from = f, to = to, overwrite = FALSE, recursive = TRUE)
+  }
+  file.rename(file.path(dirname(file), "skeleton.Rmd"), file)
+
+  invisible(file)
+
+}
+
+### ############################################################ ###
+
+#' Adding DESCRIPTION information to an existing package
+#'
+#' @description
+#' This function \code{add_dcf_info} uses the reference class
+#' \code{DcfRefClass} to represent the information stored in
+#' a DESCRIPTION file. Any arguments specified to \code{add_dcf_info}
+#' that are not null, are written to the DESCRIPTION file
+#' and therebye overwritting the existing information in the
+#' DESCRIPTION file.
+#'
+#' @param psPkgPath           package path
+#' @param psDescTitle         title of the package
+#' @param psDescAuthor        author information
+#' @param psDescDescription   Description field in dcf
+#' @param psDescLicense       license information
+#' @export add_dcf_info
+add_dcf_info <- function(psPkgPath,
+                         psDescTitle = NULL,
+                         psDescAuthor = NULL,
+                         psDescMaintainer = NULL,
+                         psDescDescription = NULL,
+                         psDescLicense = NULL) {
+
+  ### # define pkg DESCRIPTION file
+  sDcfFile <- file.path(psPkgPath, "DESCRIPTION")
+  ### # read existing DESCRIPTION
+  refObjDesc <- DcfRefClass$new()
+  refObjDesc$readDcf(psDcfFile = sDcfFile)
+  ### # change values
+  if (!is.null(psDescTitle))
+    refObjDesc$setTitle(psTitle = psDescTitle)
+  if (!is.null(psDescAuthor))
+    refObjDesc$setAuthor(psAuthor = psDescAuthor)
+  if (!is.null(psDescMaintainer))
+    #refObjDesc$setMaintainer(psMaintainer = psDescMaintainer)
+    if (!is.null(psDescDescription))
+      refObjDesc$setDescription(psDescription = psDescDescription)
+  if (!is.null(psDescLicense))
+    refObjDesc$setLicense(psLicense = psDescLicense)
+  ### # write back changes
+  refObjDesc$writeDcf(psDcfFile = sDcfFile)
+}
+

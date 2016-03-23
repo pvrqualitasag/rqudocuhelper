@@ -24,6 +24,10 @@ create_docu_package(psPkgName, psPkgPath = ".", psDescTitle = NULL,
 \description{
 \code{create_docu_package} creates a documentation package using
 \code{devtools::create}. Description information can be provided
-by the additional arguments to the function
+by the additional arguments to the function. Changes to the
+DESCRIPTION file are moved to a separate function called
+\code{add_dcf_info}. If any of the arguments specific to the
+DESCRIPTION file are not null, then the function
+\code{add_dcf_info} is called.
 }
 

@@ -2,6 +2,7 @@
 
 export(DcfRefClass)
 export(SectionEnumerator)
+export(add_dcf_info)
 export(cleanup_vignettes)
 export(convertLibOToPdf)
 export(create_docu_package)
