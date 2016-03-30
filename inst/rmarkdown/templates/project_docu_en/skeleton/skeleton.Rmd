@@ -1,0 +1,112 @@
+---
+output:
+  pdf_document:
+    includes:
+      in_header: tex/header.tex
+  word_document: default
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide', include=FALSE}
+### # specify knitr options
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+
+### # initialize section counter
+robjSecEnum <- rqudocuhelper::SectionEnumerator$new()
+```
+
+![Qualitas Logo](png/QualitasLogo.png)
+
+\fcolorbox{black}{white}{
+	\parbox[t]{1.0\linewidth}{
+		\centering \fontsize{12pt}{20pt}\selectfont % 
+		\vspace*{0.5cm} % 
+
+		\hfill Document Type
+
+		\vspace*{0.5cm} 
+	}
+}
+
+\vspace*{0.5cm}
+
+\fcolorbox{black}{white}{
+	\parbox[t]{1.0\linewidth}{
+		\centering \fontsize{25pt}{40pt}\selectfont %
+		\vspace*{0.7cm}
+    Title 1    \\
+    Title 2    \\
+    Title 3    \\
+
+		\vspace*{0.7cm} % Space between the end of the title and the bottom of the grey box
+	}
+}
+
+\vspace*{1cm}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{png/Pedigree.png}
+\end{center}
+
+\vspace{5ex}
+{\centering \small
+\hfill
+\begin{tabular}{l}
+Peter von Rohr                      \\
+FB EDV, Qualitas AG                 \\
+\verb+http://www.qualitasag.ch+     \\
+\verb+peter.vonrohr@qualitasag.ch+  
+\end{tabular}
+}
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+# Document Status
+
+
+```{r DocuStatusTable}
+robjDocuStatus <- rqudocuhelper::refObjTable$new()
+pvecTableHeader <- c("Version",
+                     "Date",
+                     "Who",
+                     "Change")
+robjDocuStatus$setTableHeader(psTableHeader = pvecTableHeader)
+robjDocuStatus$addRow(plTableRow = list(Version = "0.0.0.900",
+                                        Date    = "",
+                                        Who     = Sys.info()[["user"]],
+                                        Change  = "Initialisation"))
+#robjDocuStatus$addRow(plTableRow = list(Version = "0.0.0.901",
+#                                        Date    = "",
+#                                        Who     = Sys.info()[["user"]],
+#                                        Change  = ""))
+robjDocuStatus$to_pander_pandoc(psStyle = "grid",
+                                psJustify = rep("left", length(pvecTableHeader)),
+                                pnSplitCells = c(10,15,5,40))
+
+```
+
+\pagebreak
+
+# Abbreviations
+
+```{r AbrTable}
+robjAbrTable <- rqudocuhelper::refObjTable$new()
+pvecTableHeader <- c("Abbreviation",
+                     "Meaning")
+robjAbrTable$setTableHeader(psTableHeader = pvecTableHeader)
+robjAbrTable$addRow(plTableRow = list(Abr = "Abbr",
+                                      What = "Abbreviation"))
+#robjAbrTable$addRow(plTableRow = list(Abr = "",
+#                                      What = ""))
+robjAbrTable$to_pander_pandoc(psStyle = "grid",
+                              psJustify = rep("left", length(pvecTableHeader)),
+                              pnSplitCells = c(20,60))
+```
+
+\pagebreak
+
+
+# Disclaimer
