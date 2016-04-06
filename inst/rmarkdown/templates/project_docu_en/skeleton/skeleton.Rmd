@@ -53,6 +53,7 @@ robjSecEnum <- rqudocuhelper::SectionEnumerator$new()
 \begin{tabular}{l}
 Peter von Rohr                      \\
 FB EDV, Qualitas AG                 \\
+Chamerstrasse 56, CH-6300 Zug       \\
 \verb+http://www.qualitasag.ch+     \\
 \verb+peter.vonrohr@qualitasag.ch+  
 \end{tabular}
