@@ -6,7 +6,8 @@
 \usage{
 create_docu_skeleton(psDocuName, psPkgPath = ".",
   psRmdTemplate = "project_docu", psTemplatePkg = "rqudocuhelper",
-  psDocuSubdir = "vignettes", pbOverwrite = FALSE, pbEdit = FALSE)
+  psDocuSubdir = "vignettes", pbDocuHasOwnSubdir = TRUE,
+  pbOverwrite = FALSE, pbEdit = FALSE)
 }
 \arguments{
 \item{psDocuName}{name of the new document}
@@ -18,6 +19,10 @@ create_docu_skeleton(psDocuName, psPkgPath = ".",
 \item{psTemplatePkg}{package from where the template should be taken}
 
 \item{psDocuSubdir}{subdirectory in which document should be saved to}
+
+\item{pbDocuHasOwnSubdir}{should document be stored in separate subdir}
+
+\item{pbOverwrite}{flag whether existing files are overwritten}
 
 \item{pbEdit}{directly open newly created document}
 }

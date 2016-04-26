@@ -48,6 +48,37 @@ create_docu_package <- function(psPkgName,
 
 ### ############################################################ ###
 
+#' @title Create a new Qualitas project document
+#'
+#' @description
+#' This function is a wrapper for \code{create_docu_skeleton}
+#' using the fixed template "project_docu" from package
+#' \code{rqudocuhelper}.
+#'
+#' @param   psDocuName           name of the new document
+#' @param   psPkgPath            path where package is located under which document should be created
+#' @param   psDocuSubdir         subdirectory in which document should be saved to
+#' @param   pbDocuHasOwnSubdir   should document be stored in separate subdir
+#' @param   pbOverwrite          flag whether existing files are overwritten
+#' @param   pbEdit               directly open newly created document
+#' @export create_qudocu_skeleton
+create_qudocu_skeleton <- function(psDocuName,
+                                   psPkgPath     = ".",
+                                   psDocuSubdir  = "vignettes",
+                                   pbDocuHasOwnSubdir = TRUE,
+                                   pbOverwrite   = FALSE,
+                                   pbEdit        = TRUE) {
+  create_docu_skeleton(psDocuName         = psDocuName,
+                       psPkgPath          = psPkgPath,
+                       psRmdTemplate      = "project_docu",
+                       psTemplatePkg      = "rqudocuhelper",
+                       psDocuSubdir       = psDocuSubdir,
+                       pbDocuHasOwnSubdir = pbDocuHasOwnSubdir,
+                       pbOverwrite        = pbOverwrite,
+                       pbEdit             = pbEdit)
+}
+
+
 #' Create a new Rmarkdown (Rmd) document
 #'
 #' @description
@@ -63,18 +94,21 @@ create_docu_package <- function(psPkgName,
 #' \code{devtools::use_vignette}, except for the possibility
 #' of specifying any given template from any package.
 #'
-#' @param   psDocuName   name of the new document
-#' @param   psPkgPath    path where package is located under which document should be created
-#' @param   psRmdTemplate   name of the template to be used
-#' @param   psTemplatePkg   package from where the template should be taken
-#' @param   psDocuSubdir    subdirectory in which document should be saved to
-#' @param   pbEdit          directly open newly created document
+#' @param   psDocuName           name of the new document
+#' @param   psPkgPath            path where package is located under which document should be created
+#' @param   psRmdTemplate        name of the template to be used
+#' @param   psTemplatePkg        package from where the template should be taken
+#' @param   psDocuSubdir         subdirectory in which document should be saved to
+#' @param   pbDocuHasOwnSubdir   should document be stored in separate subdir
+#' @param   pbOverwrite          flag whether existing files are overwritten
+#' @param   pbEdit               directly open newly created document
 #' @export create_docu_skeleton
 create_docu_skeleton <- function(psDocuName,
                                  psPkgPath     = ".",
                                  psRmdTemplate = "project_docu",
                                  psTemplatePkg = "rqudocuhelper",
                                  psDocuSubdir  = "vignettes",
+                                 pbDocuHasOwnSubdir = TRUE,
                                  pbOverwrite   = FALSE,
                                  pbEdit        = FALSE) {
   ### # do the preparation similar to devtools::use_vignette
@@ -83,8 +117,14 @@ create_docu_skeleton <- function(psDocuName,
   devtools:::add_desc_package(pkg, "Suggests", "knitr")
   devtools:::add_desc_package(pkg, "Suggests", "rmarkdown")
   devtools:::add_desc_package(pkg, "VignetteBuilder", "knitr")
-  dir.create(file.path(pkg$path, psDocuSubdir), showWarnings = FALSE)
-  sDocuPath <- file.path(pkg$path, psDocuSubdir, paste0(psDocuName, ".Rmd"))
+  ### # for the document directory, differentiate whether the document
+  ### #  should be moved to a separate subdirectory
+  sDocuDir <- file.path(pkg$path, psDocuSubdir)
+  if (pbDocuHasOwnSubdir)
+    sDocuDir <- file.path(sDocuDir, psDocuName)
+  if (!dir.exists(sDocuDir))
+    dir.create(sDocuDir, showWarnings = FALSE, recursive = TRUE)
+  sDocuPath <- file.path(sDocuDir, paste0(psDocuName, ".Rmd"))
   rmd_draft(file = sDocuPath,
             template = psRmdTemplate,
             package = psTemplatePkg,
