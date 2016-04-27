@@ -9,6 +9,22 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## Document Status
+This section is a test for a semi-automated document status generator
+```{r DocumentStatus}
+r6objStat <- rqudocuhelper::R6ClassDocuStatus$new()
+#r6objStat$getVersion()
+#r6objStat$setVersion("0.0.903")
+# r6objStat$getDate()
+# r6objStat$getAuthor()
+r6objStat$setProject("rquodocuhelper")
+r6objStat$setStatus("Added autoincrement of fix level version")
+# r6objStat$getStatus()
+
+r6objStat$writeStatusToFile()
+r6objStat$knitr_kable()
+```
+
 Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 
 - Never uses retina figures

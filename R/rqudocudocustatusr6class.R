@@ -21,31 +21,31 @@
 #' @export R6ClassVersion
 R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
                               public = list(
-                                initialize = function(pnMajorVersion = NULL,
-                                                      pnMinorVersion = NULL,
-                                                      pnFixLevel = NULL){
+                                initialize = function(pnMajorVersion = NA,
+                                                      pnMinorVersion = NA,
+                                                      pnFixLevel = NA){
                                   ### # by default we start with 0.0.900
                                   private$nMajorVersion <- 0
-                                  if (!is.null(pnMajorVersion))
+                                  if (!is.na(pnMajorVersion))
                                     private$nMajorVersion <- pnMajorVersion
                                   ### # minor version
                                   private$nMinorVersion <- 0
-                                  if (!is.null(pnMinorVersion))
+                                  if (!is.na(pnMinorVersion))
                                     private$nMinorVersion <- pnMinorVersion
                                   ### # fix level
                                   private$nFixLevel <- 900
-                                  if (!is.null(pnFixLevel))
+                                  if (!is.na(pnFixLevel))
                                     private$nFixLevel <- pnFixLevel
                                 },
-                                incrementFixLevel = function(pnFixLevelIncrement = 1){
-                                  private$nFixLevel <- private$nFixLevel + pnFixLevelIncrement
+                                incrementFixLevel = function(){
+                                  private$nFixLevel <- private$nFixLevel + 1
                                 },
-                                incrementMinorVersion = function(pnMinorIncrement = 1){
-                                  private$nMinorVersion <- private$nMinorVersion + pnMinorIncrement
+                                incrementMinorVersion = function(){
+                                  private$nMinorVersion <- private$nMinorVersion + 1
                                   private$nFixLevel <- 0
                                 },
-                                incrementMajorVersion = function(pnMajorIncrement = 1){
-                                  private$nMajorVersion <- private$nMajorVersion + pnMajorIncrement
+                                incrementMajorVersion = function(){
+                                  private$nMajorVersion <- private$nMajorVersion + 1
                                   private$nMinorVersion <- 0
                                   private$nFixLevel <- 0
                                 },
@@ -56,15 +56,15 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
                                 string_parse = function(psVersionString){
                                   sVersionString <- unlist(strsplit(psVersionString, split = ".", fixed = TRUE))
                                   stopifnot(identical(length(sVersionString),3L))
-                                  private$nMajorVersion <- sVersionString[1]
-                                  private$nMinorVersion <- sVersionString[2]
-                                  private$nFixLevel <- sVersionString[3]
+                                  private$nMajorVersion <- as.numeric(sVersionString[1])
+                                  private$nMinorVersion <- as.numeric(sVersionString[2])
+                                  private$nFixLevel <- as.numeric(sVersionString[3])
                                 }
                               ),
                               private = list(
-                                nMajorVersion = NULL,
-                                nMinorVersion = NULL,
-                                nFixLevel     = NULL
+                                nMajorVersion = 0,
+                                nMinorVersion = 0,
+                                nFixLevel     = 0
                               ))
 
 
@@ -84,70 +84,147 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
 R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                  public    = list(
                                    initialize = function(){
-                                     version <- R6ClassVersion$new()
-                                     date    <- Sys.Date()
-                                     author  <- Sys.info()[["user"]]
-                                     status  <- ""
-                                     project <- ""
+                                     ### # read status history, if it exists
+                                     if (file.exists(private$history_file)){
+                                       self$readStatusFromFile()
+                                       nNrStatusRecords <- nrow(private$status_history)
+                                       self$setVersion(psVersion = private$status_history[nNrStatusRecords, "version"])
+                                       private$autoincrement_version()
+                                     }
                                    },
-                                   addStatusRecord = function(psVersion = NULL,
-                                                              psDate    = NULL,
-                                                              psAuthor  = NULL,
-                                                              psStatus  = NULL,
-                                                              psProject = NULL){
-                                     ### # determine how many version records we have
-                                     nNrVersionRecs <- length(private$version)
-                                     ### # add version
-                                     if (is.null(psVersion)){
-                                       if (nNrVersionRecs > 0){
-                                         r6Version <- private$version[nNrVersionRecs]
-                                         r6Version$incrementFixLevel()
-                                       } else {
-                                         r6Version <- R6ClassVersion$new()
-                                       }
-                                     } else {
-                                       r6Version <- R6ClassVersion$new()
-                                       r6Version$string_parse(psVersion)
-                                     }
-                                     ### # add date
-                                     if (is.null(psDate)){
-                                       sCurDate <- Sys.Date()
-                                     } else {
-                                       sCurDate <- psDate
-                                     }
-                                     ### # add status
-                                     if (is.null(psStatus)){
-                                       sStatus <- ""
-                                     } else {
-                                       sStatus <- psStatus
-                                     }
-                                     ### # add project
-                                     if (is.null(psProject)){
-                                       sProject <- ""
-                                     } else{
-                                       sProject <- psProject
-                                     }
-                                     ### # add the components
-                                     if (nNrVersionRecs > 0){
-                                       private$version <- c(private$version, r6Version)
-                                       private$date <- c(private$date, sCurDate)
-                                       private$status <- c(private$status, sStatus)
-                                       private$project <- c(private$project, sProject)
-                                     } else {
-                                       private$version <- r6Version
-                                       private$date <- sCurDate
-                                       private$status <- sStatus
-                                       private$project <- sProject
-                                     }
-
+                                   setVersion = function(psVersion){
+                                     private$version <- psVersion
+                                   },
+                                   getVersion = function(){
+                                     return(private$version)
+                                   },
+                                   setDate = function(psDate){
+                                     private$date <- psDate
+                                   },
+                                   getDate = function(){
+                                     return(private$date)
+                                   },
+                                   setAuthor = function(psAuthor){
+                                     private$author <- psAuthor
+                                   },
+                                   getAuthor = function(){
+                                     return(private$author)
+                                   },
+                                   setStatus = function(psStatus){
+                                     private$status = psStatus
+                                   },
+                                   getStatus = function(){
+                                     return(private$status)
+                                   },
+                                   setProject = function(psProject){
+                                     private$project <- psProject
+                                   },
+                                   getProject = function(){
+                                     return(private$project)
+                                   },
+                                   writeStatusToFile = function(psFileName = NULL){
+                                     dfCurStatus <- private$stat_to_df()
+                                     write.csv2(dfCurStatus, file = private$history_file,
+                                                quote = FALSE,
+                                                row.names = FALSE)
+                                   },
+                                   readStatusFromFile = function(psFileName = NULL){
+                                     sFileName <- psFileName
+                                     if (is.null(psFileName))
+                                       sFileName <- private$history_file
+                                     if (!file.exists(sFileName))
+                                       stop("CANNOT FIND Status file: ", sFileName)
+                                     private$status_history <- read.csv2(file = sFileName,
+                                                                         stringsAsFactors = FALSE)
+                                   },
+                                   knitr_kable = function(){
+                                     dfCurStatus <- private$stat_to_df()
+                                     knitr::kable(dfCurStatus)
                                    }
                                  ),
-                                 private   = list(version = NULL,
-                                                  author = NULL,
-                                                  date   = NULL,
-                                                  status = NULL,
-                                                  project = NULL))
+                                 private   = list(version = "0.0.900",
+                                                  author = Sys.info()[["user"]],
+                                                  date   = as.character(Sys.Date()),
+                                                  status = "Init",
+                                                  project = "NA",
+                                                  status_colnames = c("Version", "Date", "Author","Status","Project"),
+                                                  status_history = NULL,
+                                                  history_file = "DOCUMENTSTATUS",
+                                                  stat_to_df = function() {
+                                                    dfCurStatus <- data.frame(version = private$version,
+                                                                              author  = private$author,
+                                                                              date    = private$date,
+                                                                              status  = private$status,
+                                                                              project = private$project)
+                                                    if (!is.null(private$status_history))
+                                                      ### # check whether version number already exists
+                                                      cur_stat_col <- which(dfCurStatus$version == private$status_history$version)
+                                                      if (length(cur_stat_col) > 0) {
+                                                        dfCurStatus <- rbind(private$status_history[-cur_stat_col,], dfCurStatus)
+                                                      } else {
+                                                        dfCurStatus <- rbind(private$status_history, dfCurStatus)
+                                                      }
+                                                    return(dfCurStatus)},
+                                                  autoincrement_version = function(){
+                                                    r6oVersion <- R6ClassVersion$new()
+                                                    r6oVersion$string_parse(psVersionString = private$version)
+                                                    r6oVersion$incrementFixLevel()
+                                                    private$version <- r6oVersion$to_string()
+                                                  }))
 
+
+
+# addStatusRecord = function(psVersion = NULL,
+#                            psDate    = NULL,
+#                            psAuthor  = NULL,
+#                            psStatus  = NULL,
+#                            psProject = NULL){
+#   ### # determine how many version records we have
+#   nNrVersionRecs <- length(private$version)
+#   ### # add version
+#   if (is.null(psVersion)){
+#     if (nNrVersionRecs > 0){
+#       r6Version <- private$version[nNrVersionRecs]
+#       r6Version$incrementFixLevel()
+#     } else {
+#       r6Version <- R6ClassVersion$new()
+#     }
+#   } else {
+#     r6Version <- R6ClassVersion$new()
+#     r6Version$string_parse(psVersion)
+#   }
+#   ### # add date
+#   if (is.null(psDate)){
+#     sCurDate <- Sys.Date()
+#   } else {
+#     sCurDate <- psDate
+#   }
+#   ### # add status
+#   if (is.null(psStatus)){
+#     sStatus <- ""
+#   } else {
+#     sStatus <- psStatus
+#   }
+#   ### # add project
+#   if (is.null(psProject)){
+#     sProject <- ""
+#   } else{
+#     sProject <- psProject
+#   }
+#   ### # add the components
+#   if (nNrVersionRecs > 0){
+#     private$version <- c(private$version, r6Version)
+#     private$date <- c(private$date, sCurDate)
+#     private$status <- c(private$status, sStatus)
+#     private$project <- c(private$project, sProject)
+#   } else {
+#     private$version <- r6Version
+#     private$date <- sCurDate
+#     private$status <- sStatus
+#     private$project <- sProject
+#   }
+#
+# }
 #' R6Class Representing A Generic Table Object
 #'
 #'
