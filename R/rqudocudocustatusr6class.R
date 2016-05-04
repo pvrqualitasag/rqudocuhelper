@@ -11,11 +11,11 @@
 #'
 #' @description
 #' Version strings can be separated into three parts
-#' \begin{enumerate}
-#' \item major version
-#' \item minor version
-#' \item fix level
-#' \end{enumerate}
+#' \enumerate{
+#'   \item major version
+#'   \item minor version
+#'   \item fix level
+#' }
 #' For each of the three parts a private field is created
 #'
 #' @export R6ClassVersion
@@ -70,6 +70,8 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
 
 #' @title R6 Class Representing Document Status Objects
 #'
+#' @docType class
+#' @importFrom R6 R6Class
 #' @description
 #' \code{R6ClassDocuStatus} objects can be used to represent the status
 #' of a given document. A core requirement is that the different status
@@ -81,9 +83,47 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
 #' and we must be able to display all document status records as a table.
 #'
 #' @export R6ClassDocuStatus
+#' @usage R6ClassDocuStatus$new()
+#' @return Object of \code{\link{R6Class}} with methods for managing the status of a document.
+#' @format \code{\link{R6Class}} object.
+#' @examples
+#' r6objDocuStat <- R6ClassDocuStatus$new()
+#' r6objDocuStat$setProject(psProject = "DEXSeq")
+#' r6objDocuStat$setVersion(psVersion = "0.0.900")
+#' r6objDocuStat$setDate(psDate = "31.03.2016")
+#' r6objDocuStat$setAuthor(psAuthor = "pvr")
+#' r6objDocuStat$setStatus(psStatus = "Init")
+#' \dontrun{
+#' r6objDocuStat$writeStatusToFile()
+#' r6objDocuStat$knitr_kable()
+#' }
+#' @field version current version of the document
+#' @field author author of the change leading to the current status of the document
+#' @field date date of the current change
+#' @field status description of document status
+#' @field project project this document belongs to
+#' @field status_colnames vector of column names shown in the document table
+#' @field status_history dataframe with the document history read from the history file
+#' @field history_file name of the file containing the document history
+#' @section Methods:
+#' \describe{
+#'   \item{\code{new()}}{This method instantiates an object of class R6ClassDocuStatus}
+#'   \item{\code{initialize()}}{Initialization of field called after creating the instance}
+#'   \item{\code{writeStatusToFile(psFileName = NULL)}}{Writes current status and history
+#'               to a csv2-formatted file. If argument
+#'               psFileName is not null the name of the output file is set to psFileName,
+#'               otherwise the value in field history_file is used.}
+#'   \item{\code{readStatusFromFile(psFileName = NULL)}}{Document status history is read
+#'               from the history file. The name of the
+#'               history file is either taken from the method argument psFileName or from
+#'               the object field history_file.}
+#' }
 R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                  public    = list(
                                    initialize = function(){
+                                     'Initialisation of a new document status object. If a
+                                      document status history exists, it is read and assigned
+                                      to an internal dataframe.'
                                      ### # read status history, if it exists
                                      if (file.exists(private$history_file)){
                                        self$readStatusFromFile()
@@ -156,7 +196,7 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                                                               date    = private$date,
                                                                               status  = private$status,
                                                                               project = private$project)
-                                                    if (!is.null(private$status_history))
+                                                    if (!is.null(private$status_history)){
                                                       ### # check whether version number already exists
                                                       cur_stat_col <- which(dfCurStatus$version == private$status_history$version)
                                                       if (length(cur_stat_col) > 0) {
@@ -164,6 +204,7 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                                       } else {
                                                         dfCurStatus <- rbind(private$status_history, dfCurStatus)
                                                       }
+                                                    }
                                                     return(dfCurStatus)},
                                                   autoincrement_version = function(){
                                                     r6oVersion <- R6ClassVersion$new()
@@ -173,58 +214,6 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                                   }))
 
 
-
-# addStatusRecord = function(psVersion = NULL,
-#                            psDate    = NULL,
-#                            psAuthor  = NULL,
-#                            psStatus  = NULL,
-#                            psProject = NULL){
-#   ### # determine how many version records we have
-#   nNrVersionRecs <- length(private$version)
-#   ### # add version
-#   if (is.null(psVersion)){
-#     if (nNrVersionRecs > 0){
-#       r6Version <- private$version[nNrVersionRecs]
-#       r6Version$incrementFixLevel()
-#     } else {
-#       r6Version <- R6ClassVersion$new()
-#     }
-#   } else {
-#     r6Version <- R6ClassVersion$new()
-#     r6Version$string_parse(psVersion)
-#   }
-#   ### # add date
-#   if (is.null(psDate)){
-#     sCurDate <- Sys.Date()
-#   } else {
-#     sCurDate <- psDate
-#   }
-#   ### # add status
-#   if (is.null(psStatus)){
-#     sStatus <- ""
-#   } else {
-#     sStatus <- psStatus
-#   }
-#   ### # add project
-#   if (is.null(psProject)){
-#     sProject <- ""
-#   } else{
-#     sProject <- psProject
-#   }
-#   ### # add the components
-#   if (nNrVersionRecs > 0){
-#     private$version <- c(private$version, r6Version)
-#     private$date <- c(private$date, sCurDate)
-#     private$status <- c(private$status, sStatus)
-#     private$project <- c(private$project, sProject)
-#   } else {
-#     private$version <- r6Version
-#     private$date <- sCurDate
-#     private$status <- sStatus
-#     private$project <- sProject
-#   }
-#
-# }
 #' R6Class Representing A Generic Table Object
 #'
 #'
