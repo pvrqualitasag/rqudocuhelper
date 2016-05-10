@@ -1,6 +1,8 @@
-version;author;date;status;project
-0.0.900;pvr;2016-04-27;Init;ATDA-ASR
-0.0.901;pvr;16918;First changes;ATDA-ASR
-0.0.902;pvr;2016-04-27;Second changes;ATDA-ASR
-0.0.903;pvr;2016-04-27;Started with docu status generator;rquodocuhelper
-0.0.904;pvr;2016-04-27;Added autoincrement of fix level version;rquodocuhelper
+version	author	date	status	project
+0.0.900	pvr	2016-04-27	Init	ATDA-ASR
+0.0.901	pvr	16918	First changes	ATDA-ASR
+0.0.902	pvr	2016-04-27	Second changes	ATDA-ASR
+0.0.903	pvr	2016-04-27	Started with docu status generator	rquodocuhelper
+0.0.904	pvr	2016-04-27	Added autoincrement of fix level version	rquodocuhelper
+0.0.905	pvr	2016-05-04	Test adding the same entry	rquodocuhelper
+0.0.906	pvr	2016-05-10	Changed format and fileEncoding for äöü	rquodocuhelper

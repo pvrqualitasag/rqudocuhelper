@@ -110,9 +110,11 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
 #'   \item{\code{new()}}{This method instantiates an object of class R6ClassDocuStatus}
 #'   \item{\code{initialize()}}{Initialization of field called after creating the instance}
 #'   \item{\code{writeStatusToFile(psFileName = NULL)}}{Writes current status and history
-#'               to a csv2-formatted file. If argument
+#'               to a tab-separated file. Tab-separated format is chosen, because TAB-characters
+#'               are less likely to occur in any of the table fields. If argument
 #'               psFileName is not null the name of the output file is set to psFileName,
-#'               otherwise the value in field history_file is used.}
+#'               otherwise the value in field history_file is used. File encoding is set
+#'               to "UTF-8" in order to preserve German Umlauts}
 #'   \item{\code{readStatusFromFile(psFileName = NULL)}}{Document status history is read
 #'               from the history file. The name of the
 #'               history file is either taken from the method argument psFileName or from
@@ -164,9 +166,11 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                    },
                                    writeStatusToFile = function(psFileName = NULL){
                                      dfCurStatus <- private$stat_to_df()
-                                     write.csv2(dfCurStatus, file = private$history_file,
-                                                quote = FALSE,
-                                                row.names = FALSE)
+                                     write.table(dfCurStatus, file = private$history_file,
+                                                 quote = FALSE,
+                                                 sep = "\t",
+                                                 row.names = FALSE,
+                                                 fileEncoding = "UTF-8")
                                    },
                                    readStatusFromFile = function(psFileName = NULL){
                                      sFileName <- psFileName
@@ -174,8 +178,11 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                        sFileName <- private$history_file
                                      if (!file.exists(sFileName))
                                        stop("CANNOT FIND Status file: ", sFileName)
-                                     private$status_history <- read.csv2(file = sFileName,
-                                                                         stringsAsFactors = FALSE)
+                                     private$status_history <- read.table(file = sFileName,
+                                                                          header = TRUE,
+                                                                          row.names = NULL,
+                                                                          sep = "\t",
+                                                                          stringsAsFactors = FALSE)
                                    },
                                    knitr_kable = function(){
                                      dfCurStatus <- private$stat_to_df()

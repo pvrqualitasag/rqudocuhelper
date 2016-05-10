@@ -46,9 +46,11 @@ and we must be able to display all document status records as a table.
   \item{\code{new()}}{This method instantiates an object of class R6ClassDocuStatus}
   \item{\code{initialize()}}{Initialization of field called after creating the instance}
   \item{\code{writeStatusToFile(psFileName = NULL)}}{Writes current status and history
-              to a csv2-formatted file. If argument
+              to a tab-separated file. Tab-separated format is chosen, because TAB-characters
+              are less likely to occur in any of the table fields. If argument
               psFileName is not null the name of the output file is set to psFileName,
-              otherwise the value in field history_file is used.}
+              otherwise the value in field history_file is used. File encoding is set
+              to "UTF-8" in order to preserve German Umlauts}
   \item{\code{readStatusFromFile(psFileName = NULL)}}{Document status history is read
               from the history file. The name of the
               history file is either taken from the method argument psFileName or from
