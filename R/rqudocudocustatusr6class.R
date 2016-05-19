@@ -119,16 +119,23 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
 #'               from the history file. The name of the
 #'               history file is either taken from the method argument psFileName or from
 #'               the object field history_file.}
+#'   \item{\code{readCsv2StatusFromFile(psFileName = NULL)}}{Reading method for old csv2
+#'               formatted status history files. This is mainly used for converting history
+#'               files from old csv2 format to new tab-separated format.}
 #' }
 R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                  public    = list(
-                                   initialize = function(){
+                                   initialize = function(psFormat = "tab"){
                                      'Initialisation of a new document status object. If a
                                       document status history exists, it is read and assigned
                                       to an internal dataframe.'
                                      ### # read status history, if it exists
                                      if (file.exists(private$history_file)){
-                                       self$readStatusFromFile()
+                                       if (psFormat == "csv2"){
+                                         self$readCsv2StatusFromFile()
+                                       } else {
+                                         self$readStatusFromFile()
+                                       }
                                        nNrStatusRecords <- nrow(private$status_history)
                                        self$setVersion(psVersion = private$status_history[nNrStatusRecords, "version"])
                                        private$autoincrement_version()
@@ -165,6 +172,12 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                      return(private$project)
                                    },
                                    writeStatusToFile = function(psFileName = NULL){
+                                     ### # if date and author were not set before, set them now
+                                     if (is.null(private$date))
+                                       self$setDate(psDate = as.character(Sys.Date()))
+                                     if (is.null(private$author))
+                                       self$setAuthor(psAuthor = Sys.info()[["user"]])
+                                     ### # convert status to a dataframe and write it to the history file
                                      dfCurStatus <- private$stat_to_df()
                                      write.table(dfCurStatus, file = private$history_file,
                                                  quote = FALSE,
@@ -182,7 +195,19 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                                                           header = TRUE,
                                                                           row.names = NULL,
                                                                           sep = "\t",
-                                                                          stringsAsFactors = FALSE)
+                                                                          stringsAsFactors = FALSE,
+                                                                          fileEncoding = "UTF-8")
+                                   },
+                                   readCsv2StatusFromFile = function(psFileName = NULL){
+                                     sFileName <- psFileName
+                                     if (is.null(psFileName))
+                                       sFileName <- private$history_file
+                                     if (!file.exists(sFileName))
+                                       stop("CANNOT FIND Status file: ", sFileName)
+                                     private$status_history <- read.csv2(file = sFileName,
+                                                                          row.names = NULL,
+                                                                          stringsAsFactors = FALSE,
+                                                                          fileEncoding = "UTF-8")
                                    },
                                    knitr_kable = function(){
                                      dfCurStatus <- private$stat_to_df()
@@ -190,8 +215,8 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                    }
                                  ),
                                  private   = list(version = "0.0.900",
-                                                  author = Sys.info()[["user"]],
-                                                  date   = as.character(Sys.Date()),
+                                                  author = NULL,
+                                                  date   = NULL,
                                                   status = "Init",
                                                   project = "NA",
                                                   status_colnames = c("Version", "Date", "Author","Status","Project"),

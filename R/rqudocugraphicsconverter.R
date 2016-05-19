@@ -31,9 +31,11 @@ convertLibOToPdf <- function(psLibOFile, psLibODir = "odg", psFigOutDir = "."){
 #' \code{insertOdgAsPdf} is just a wrapper to the same function
 #' in package \code{rcoursetools}
 #'
-#' @param  psOdgFileStem  stem of odg figure file
-#' @param  psOdgDir       directory where odg figure file is stored
-#' @param  psFigOutDir    directory where output should be placed
+#' @param  psOdgFileStem       stem of odg figure file
+#' @param  psOdgDir            directory where odg figure file is stored
+#' @param  psFigOutDir         directory where output should be placed
+#' @param  pbMustGenerate      flag whether pdf must be regenerated
+#' @param  pnPaperWidthScale   factor with which graphic is scaled
 #' @export insertOdgAsPdf
 insertOdgAsPdf <- function(psOdgFileStem, psOdgDir = "odg",
                            psFigOutDir = ".",

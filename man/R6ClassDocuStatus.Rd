@@ -55,6 +55,9 @@ and we must be able to display all document status records as a table.
               from the history file. The name of the
               history file is either taken from the method argument psFileName or from
               the object field history_file.}
+  \item{\code{readCsv2StatusFromFile(psFileName = NULL)}}{Reading method for old csv2
+              formatted status history files. This is mainly used for converting history
+              files from old csv2 format to new tab-separated format.}
 }
 }
 \examples{

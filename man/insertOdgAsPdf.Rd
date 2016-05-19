@@ -13,6 +13,10 @@ insertOdgAsPdf(psOdgFileStem, psOdgDir = "odg", psFigOutDir = ".",
 \item{psOdgDir}{directory where odg figure file is stored}
 
 \item{psFigOutDir}{directory where output should be placed}
+
+\item{pbMustGenerate}{flag whether pdf must be regenerated}
+
+\item{pnPaperWidthScale}{factor with which graphic is scaled}
 }
 \description{
 \code{insertOdgAsPdf} is just a wrapper to the same function
