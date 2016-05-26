@@ -58,6 +58,12 @@ and we must be able to display all document status records as a table.
   \item{\code{readCsv2StatusFromFile(psFileName = NULL)}}{Reading method for old csv2
               formatted status history files. This is mainly used for converting history
               files from old csv2 format to new tab-separated format.}
+  \item{\code{knitr_kable}}{Add current document status info to document history and
+              convert it to a dataframe. Then use \code{knitr::kable} to convert the
+              dataframe into a markdown-table}
+  \item{\code{include_doc_stat}}{Saves updated document status to the status file.
+              Write section header for document status and write
+              markdown table containing the document status.}
 }
 }
 \examples{

@@ -122,6 +122,12 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
 #'   \item{\code{readCsv2StatusFromFile(psFileName = NULL)}}{Reading method for old csv2
 #'               formatted status history files. This is mainly used for converting history
 #'               files from old csv2 format to new tab-separated format.}
+#'   \item{\code{knitr_kable}}{Add current document status info to document history and
+#'               convert it to a dataframe. Then use \code{knitr::kable} to convert the
+#'               dataframe into a markdown-table}
+#'   \item{\code{include_doc_stat}}{Saves updated document status to the status file.
+#'               Write section header for document status and write
+#'               markdown table containing the document status.}
 #' }
 R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                  public    = list(
@@ -212,6 +218,11 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                    knitr_kable = function(){
                                      dfCurStatus <- private$stat_to_df()
                                      knitr::kable(dfCurStatus)
+                                   },
+                                   include_doc_stat = function(){
+                                     self$writeStatusToFile()
+                                     cat("# Document Status\n")
+                                     self$knitr_kable()
                                    }
                                  ),
                                  private   = list(version = "0.0.900",
