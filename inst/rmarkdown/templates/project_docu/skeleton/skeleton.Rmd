@@ -3,6 +3,7 @@ output:
   pdf_document:
     includes:
       in_header: tex/header.tex
+    fig_caption: false
   word_document: default
 ---
 
@@ -65,29 +66,18 @@ Chamerstrasse 56, CH-6300 Zug       \\
 
 \pagebreak
 
-# Dokumentenstatus
-
+```{r Setup, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+```
 
 
 ```{r DocuStatusTable}
-robjDocuStatus <- rqudocuhelper::refObjTable$new()
-pvecTableHeader <- c("Version",
-                     "Datum",
-                     "Wer",
-                     "Änderung")
-robjDocuStatus$setTableHeader(psTableHeader = pvecTableHeader)
-robjDocuStatus$addRow(plTableRow = list(Version = "0.0.0.900",
-                                        Date    = "",
-                                        Who     = Sys.info()[["user"]],
-                                        Change  = "Erstellung"))
-#robjDocuStatus$addRow(plTableRow = list(Version = "0.0.0.901",
-#                                        Date    = "",
-#                                        Who     = Sys.info()[["user"]],
-#                                        Change  = ""))
-robjDocuStatus$to_pander_pandoc(psStyle = "grid",
-                                psJustify = rep("left", length(pvecTableHeader)),
-                                pnSplitCells = c(10,15,5,40))
+r6objDocStat <- rqudocuhelper::R6ClassDocuStatus$new()
+r6objDocStat$setProject(psProject = "ATDA-ASR")
+r6objDocStat$setVersion(psVersion = "0.0.901")
+r6objDocStat$setStatus(psStatus = "Erstellung")
 
+r6objDocStat$include_doc_stat()
 ```
 
 \pagebreak

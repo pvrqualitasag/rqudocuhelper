@@ -125,8 +125,8 @@ R6ClassVersion <- R6::R6Class(classname = "R6ClassVersion",
 #'   \item{\code{knitr_kable}}{Add current document status info to document history and
 #'               convert it to a dataframe. Then use \code{knitr::kable} to convert the
 #'               dataframe into a markdown-table}
-#'   \item{\code{include_doc_stat}}{Saves updated document status to the status file.
-#'               Write section header for document status and write
+#'   \item{\code{include_doc_stat(psTitle)}}{Saves updated document status to the status file.
+#'               Write section header psTitle for document status and write
 #'               markdown table containing the document status.}
 #' }
 R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
@@ -219,9 +219,9 @@ R6ClassDocuStatus <- R6::R6Class(classname = "R6ClassDocuStatus",
                                      dfCurStatus <- private$stat_to_df()
                                      knitr::kable(dfCurStatus)
                                    },
-                                   include_doc_stat = function(){
+                                   include_doc_stat = function(psTitle = "Document Status"){
                                      self$writeStatusToFile()
-                                     cat("# Document Status\n")
+                                     cat(paste("#", psTitle),"\n")
                                      self$knitr_kable()
                                    }
                                  ),
